@@ -80,7 +80,8 @@ def evaluate(snapshot,processes,now=None,live_birth=None):
             add('UNHEALTHY','identity','PID 已被其他进程复用，心跳不属于当前进程。')
         elif live_birth is None:
             add('UNKNOWN','identity','无法验证进程创建时间。')
-        if snapshot.get('state')!='running': add('UNHEALTHY','state','监控已正常停止。')
+        if snapshot.get('state')=='stopped': add('UNHEALTHY','state','监控已按停止请求退出。')
+        elif snapshot.get('state')=='exited': add('UNHEALTHY','state','监控已退出，原因请查看日志。')
         age=now-snapshot['heartbeat_at']
         reliable=snapshot.get('state')=='running' and 0<=age<=snapshot['heartbeat_timeout_seconds'] and processes is not None and any(p['pid']==pid for p in processes) and live_birth is not None and recorded is not None and abs(recorded-live_birth)<=1
         if age < -5: add('UNKNOWN','heartbeat','心跳时间位于未来，请检查系统时钟。')

@@ -1,0 +1,7 @@
+Pixoo AI Monitor V1 third-party notice
+
+This development package includes Python, PySide6/Qt, Shiboken, Pillow, keyring, PyInstaller bootloader and their runtime dependencies. Package metadata and the license files supplied by the installed wheels are included under licenses/. PixooCtrl attribution is in _internal/LICENSE-PixooCtrl.
+
+Qt libraries are dynamically linked DLLs in _internal/PySide6. Retain the full directory and applicable license materials. The application source and build script are in the associated development project. Review the applicable Qt/PySide6 distribution terms and source/relinking obligations before public redistribution; this package has not undergone a complete license-compliance audit.
+
+The Windows ICU runtime is provided by Windows itself. Incompatible third-party ICU DLLs collected by PyInstaller are excluded by the build script. No account keys, tokens, config.json, usage snapshots or log files are intentionally collected into this package.
