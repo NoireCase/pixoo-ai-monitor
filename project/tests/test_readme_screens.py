@@ -25,7 +25,7 @@ def test_committed_native_examples_match_renderer():
                 assert image.tobytes()==render_configured(reading,CFG,now).tobytes()
 
 def test_readme_image_links_exist():
-    readme=(ROOT/'README.md').read_text(encoding='utf-8-sig')
+    readme=(ROOT.parent/'README.md').read_text(encoding='utf-8-sig')
     links=re.findall(r'!\[[^\]]*\]\(([^)]+)\)',readme)
     assert len(links)==5
-    assert all(link.startswith('docs/screens/') and (ROOT/link).is_file() for link in links)
+    assert all(link.startswith('project/docs/screens/') and (ROOT.parent/link).is_file() for link in links)

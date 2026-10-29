@@ -35,12 +35,16 @@
 
 以下图片使用合成数据展示 B3 的六页、额度颜色、倒计时、异常提示及峰谷状态，并非当前账户的真实读数。
 
-![六页示意](docs/screens/pages.png)
+![六页示意](project/docs/screens/pages.png)
 
-![额度状态](docs/screens/quota-states.png)
+![额度状态](project/docs/screens/quota-states.png)
 
-![重置倒计时](docs/screens/countdown-states.png)
+![重置倒计时](project/docs/screens/countdown-states.png)
 
-![异常状态](docs/screens/error-states.png)
+![异常状态](project/docs/screens/error-states.png)
 
-![峰谷状态](docs/screens/deepseek-states.png)
+![峰谷状态](project/docs/screens/deepseek-states.png)
+
+## 源码目录
+
+源码、测试、构建脚本和配套资源位于 [project](project/) 目录。开发时先进入该目录，再运行测试或构建脚本：`cd project`、`python -m pytest`、`powershell -File build-exe.ps1`。
