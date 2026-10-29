@@ -1,0 +1,8 @@
+{
+  "timezone": "Asia/Shanghai",
+  "source": "https://api-docs.deepseek.com/quick_start/pricing/",
+  "reviewed_at": "2026-10-29",
+  "peak_intervals": [["09:00", "12:00"], ["14:00", "18:00"]],
+  "off_peak_multiplier": 0.5,
+  "holiday_calendar": "china_statutory_holidays.json"
+}

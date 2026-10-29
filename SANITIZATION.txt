@@ -1,0 +1,45 @@
+Sanitized source export
+Allowlist only; no runtime configuration, logs, backups, real screenshots or archives.
+Text B2 golden masks retain only synthetic test-example layouts.
+No license grant for the overall project was invented; upstream MIT notice preserved.
+Files:
+.gitignore
+app.py
+autostart.bat
+autostart.ps1
+b3_diagnose.py
+bluetooth_diagnose.py
+config.example.json
+data/china_statutory_holidays.json
+data/deepseek_price_rules.json
+diagnose.bat
+discover.py
+display/b2.py
+display/b3.py
+display/renderer.py
+display/time_status.py
+drivers/pixoo.py
+export_visual_review.py
+hardware-test.bat
+integration_test.py
+isolation_diagnose.py
+LICENSE-PixooCtrl
+preview.bat
+preview_b2_samples.py
+preview_b3_samples.py
+provider_diagnose.py
+providers/base.py
+providers/sources.py
+pytest.ini
+README.md
+requirements.txt
+set-key.bat
+set-key.py
+setup.ps1
+start.bat
+stop.bat
+tests/b2_layout_masks.json
+tests/test_b2.py
+tests/test_b3.py
+tests/test_core.py
+使用说明.txt

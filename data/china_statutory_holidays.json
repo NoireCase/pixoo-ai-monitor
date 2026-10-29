@@ -1,0 +1,5 @@
+{
+  "description": "Statutory dates only, not compensatory rest days. Reviewed 2026-10-29. Unlisted years UNKNOWN.",
+  "sources": ["https://xzfg.moj.gov.cn/front/law/detail?LawID=1737", "https://www.beijing.gov.cn/cs/gncs/zcwj/202603/t20260327_4568275.html", "https://rsj.sh.gov.cn/dzb/rsj/2026-01-15/pdf/02.pdf"],
+  "years": {"2026": ["2026-01-01", "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19", "2026-04-05", "2026-05-01", "2026-05-02", "2026-06-19", "2026-09-25", "2026-10-01", "2026-10-02", "2026-10-03"]}
+}

@@ -1,0 +1,22 @@
+{
+  "mac": "",
+  "port": 1,
+  "brightness": 50,
+  "rotation_seconds": 5,
+  "refresh_seconds": 120,
+  "enabled": [
+    "go",
+    "cx",
+    "ds"
+  ],
+  "windows": [
+    "5H",
+    "7D",
+    "30D"
+  ],
+  "low": 20,
+  "warning": 50,
+  "display_style": "b3",
+  "deepseek_reference_peak_cny": 100,
+  "display_data_stale_seconds": 360
+}

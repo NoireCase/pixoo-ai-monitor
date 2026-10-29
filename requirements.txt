@@ -1,0 +1,3 @@
+Pillow>=10,<13
+keyring>=24,<26
+pytest>=7,<10

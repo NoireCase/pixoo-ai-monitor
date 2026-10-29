@@ -1,0 +1,23 @@
+# Local configuration, credentials and environment
+config.json
+.env
+.env.*
+!.env.example
+auth.json
+*.key
+*.pem
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.log
+*.log.*
+stop.request
+backups/
+*-visual-review/
+visual-review/
+previews/
+b2-design-reference/
+*.zip
+github-release/

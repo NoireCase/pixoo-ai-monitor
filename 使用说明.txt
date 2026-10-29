@@ -1,0 +1,186 @@
+﻿Pixoo AI Monitor 使用说明（B3）
+更新日期：2026年10月29日
+项目位置：<项目目录>
+
+一、当前状态
+
+此版本支持B3六页真实额度轮播；请配置自己的设备和账户。
+OpenCode Go、Codex、DeepSeek 的数据各自独立。
+程序仅使用第一代 Pixoo 16×16 的蓝牙通信，不需要保持手机 App 开启。
+
+二、日常启动与停止
+
+启动：双击 start.bat。
+停止：双击 stop.bat，等待程序完成当前操作并正常退出。
+修改配置后：先运行 stop.bat，等待退出，再运行 start.bat。
+
+Pixoo 必须通电，并处于电脑蓝牙范围内；电脑蓝牙应开启。
+手机 Divoom App 或其他设备若占用 Pixoo 连接，请先断开。
+程序有单实例保护；出现“Another monitor instance is running”表示已有实例运行。
+重复点击启动不会新建另一个抢占蓝牙的监控实例。
+蓝牙断开后程序自动重试，重试间隔逐渐增加，最长为60秒。
+
+三、B3 屏幕怎么看
+
+左上角表示平台：
+  O（白色）：OpenCode Go 套餐额度。
+  G（青绿色）：Codex 订阅使用额度。
+  D（蓝色）：DeepSeek 官方 API 账户余额。
+
+右上角表示周期或货币：
+  H（橙色）：5小时额度窗口。
+  W（浅蓝色）：7天额度窗口。
+  M（紫色）：30天额度窗口，不代表自然月。
+  ¥（金黄色）：人民币余额。
+
+六页默认顺序：O/H、O/W、O/M、G/H、G/W、D/¥。
+默认每5秒切换一页，默认每120秒刷新各平台数据。
+
+中间的白色数字：
+  OpenCode Go / Codex：剩余额度百分比，100显示为100，其余整数带百分号。
+  DeepSeek：实际人民币余额；根据像素空间保留小数、截断显示或使用K/M等缩写。
+  显示取舍不改变程序内部保留的原始金额。
+  Codex额度不是普通ChatGPT聊天次数，也不是OpenAI API账户余额。
+
+倒数第二行（y=14）：仅H页面显示的重置倒计时。
+  固定五格，每格代表一小时，中间有黑色间隔。
+  完整小时为绿色；最后不足一小时且大于30分钟为绿色。
+  最后不足一小时且不超过30分钟为红色；剩余空格为暗灰色。
+  例如3小时25分钟：绿、绿、绿、红、灰。
+  例如3小时35分钟：绿、绿、绿、绿、灰。
+  0分钟为全灰；重置时间缺失或不可靠时也为全灰，可用诊断区分原因。
+  倒计时由本地时间更新，不会因此每分钟重新请求API。
+
+最后一行（y=15）：固定居中的14格状态条。
+  OpenCode Go / Codex：长度代表剩余额度，从左向右填充。
+    剩余至少60%为绿色；至少20%且不足60%为黄色；不足20%为红色。
+    未填充部分为暗灰色；0%全灰，100%满绿。
+  注意：小时倒计时的红绿与额度条的红绿含义不同。
+
+DeepSeek最后一行：表示API价格时段，与余额高低无关。
+  红色整条：高峰。
+  蓝色整条：空闲。
+  暗灰整条：未知，需检查日历覆盖或规则。
+  使用北京时间，周一至周五的09:00～12:00、14:00～18:00为高峰。
+  其他时段、周末及法定节假日为空闲；调休周末仍按周末处理。
+  普通调休休息日不会直接当作法定节日。
+  当前缓存日历覆盖2026年；未覆盖年份显示UNKNOWN。
+  日历文件：data\china_statutory_holidays.json。
+  价格规则：data\deepseek_price_rules.json。
+  后续需依据官方公布的信息维护文件，修改后重启程序。
+
+异常文字：
+  SET：未配置，例如缺少API密钥或Codex没有登录。
+  ERR：请求失败或数据格式不受支持。
+  OLD：旧数据或数据已过期，请检查网络和接口。
+  单个平台异常不会阻止其他正常平台继续显示。
+
+四、设置或更新API密钥
+
+双击 set-key.bat，按提示输入平台：
+  go：OpenCode Go API Key。
+  ds：DeepSeek 官方 API Key。
+
+粘贴完整密钥后按回车，核对可见内容，输入y确认保存。
+每次只设置一个平台；设置另一个平台时再运行一次。
+密钥会显示在设置窗口中，请不要截图分享；用完关闭窗口。
+密钥保存到当前Windows用户的Credential Manager，不写入config.json。
+如设置了PIXOO_GO_KEY或PIXOO_DS_KEY环境变量，程序优先使用环境变量。
+更新后重启监控，或等待下一次数据刷新。
+
+Codex使用当前Windows用户已经登录的Codex CLI。
+可在终端运行 codex login status 检查登录状态；需要登录时运行 codex login。
+不需要把Codex令牌填写到本项目。
+
+五、修改显示与刷新配置
+
+用记事本打开根目录config.json，保持JSON格式正确。
+仅修改需要的项目，不要删除其他配置项或填写密钥。
+
+display_style："b3"为当前新版；也支持"b2"和"classic"。
+brightness：亮度，0～100，当前50。
+rotation_seconds：页面切换秒数，当前5。
+refresh_seconds：数据刷新秒数，当前120。
+display_data_stale_seconds：过期判断秒数，当前360。
+enabled：启用的平台，go、cx、ds分别表示OpenCode Go、Codex、DeepSeek。
+windows：需要展示的窗口，仍写"5H"、"7D"、"30D"。
+  即使B3画面用W标记周额度，配置中仍使用"7D"。
+mac、port：已经验证的Pixoo地址与RFCOMM端口，正常使用无需更改。
+low、warning：旧版classic的颜色阈值；B3按20%和60%的固定规则着色。
+deepseek_reference_peak_cny：旧B2参考峰值参数；B3不使用它。
+
+修改后运行stop.bat，等待正常退出，再运行start.bat。
+
+六、登录后自动启动（可选）
+
+双击autostart.bat，在Windows任务计划程序中注册“Pixoo AI Monitor”。
+这需要你主动执行，不会因普通启动而自动安装。
+注册后在该Windows用户登录时启动，不是在无人登录时运行。
+需安装任务的电脑保留当前项目路径、虚拟环境及账户凭据。
+
+如需取消，在PowerShell中执行：
+  Unregister-ScheduledTask -TaskName "Pixoo AI Monitor"
+
+七、预览、导出与诊断
+
+preview.bat：打开模拟器，使用明确标注的MOCK数据，不代表真实账户余额。
+diagnose.bat：检查Python、蓝牙适配器、设备、驱动、Codex CLI及峰谷规则状态。
+hardware-test.bat：实际发送红、绿、蓝及测试画面；先停止正在运行的监控。
+  此脚本仅验证硬件画面，不用于核对真实余额。
+
+以下命令在本项目目录的PowerShell中执行：
+
+导出六页真实B3图片：
+  .\.venv\Scripts\python.exe export_visual_review.py --style b3
+输出目录：b3-visual-review
+压缩文件：b3-visual-review.zip
+图片包括16×16原始RGB图、320×320最近邻放大图和总览。
+导出会独立重新读取真实额度，不占用蓝牙，也不停止后台监控。
+导出时间可能与后台缓存不同；图片包含实际额度和余额，分享前自行核对。
+
+检查真实数据和重置时间：
+  .\.venv\Scripts\python.exe b3_diagnose.py
+
+执行自动化测试：
+  .\.venv\Scripts\python.exe -m pytest -q
+
+生成倒计时和颜色边界测试图：
+  .\.venv\Scripts\python.exe preview_b3_samples.py
+测试图位于b3-visual-review\test-samples，不能当作实时额度。
+
+日志：
+  monitor.log及轮转备份：日常运行、接口错误、蓝牙连接和发送记录。
+  hardware-diagnose.log：硬件测试诊断记录。
+  日志不记录API Key。
+
+八、常见问题
+
+1. 屏幕没有更新。
+检查Pixoo供电、电脑蓝牙、手机是否占用设备，确认监控已启动。
+断线后等候自动重连。仍失败时查看diagnose.bat和monitor.log。
+
+2. 一个平台显示ERR，其他平台正常。
+查看网络、密钥是否完整、对应服务是否可用。HTTP 401通常需检查认证；
+HTTP 400也需核对密钥及接口响应，不能仅凭状态码认定具体原因。
+
+3. H页面倒计时全灰。
+可能已经到重置时间，也可能reset_at缺失、数据过期或系统时钟异常。
+检查Windows日期时间同步，再运行b3_diagnose.py，不要自行猜测窗口重置点。
+
+4. DeepSeek显示灰条。
+检查北京时间所属年份是否在日历覆盖内，以及规则与日历JSON是否有效。
+未知年份不能仅按周一至周五推算成高峰。
+
+5. 修改配置没有立即生效。
+配置在启动时加载，需要正常停止并重新启动。
+
+6. 换了Windows用户或电脑后没有额度。
+Credential Manager和Codex登录属于具体用户，需要在新用户环境重新设置。
+不要通过分享整个配置目录或登录文件来迁移密钥。
+
+九、维护与验收记录
+
+B3包含119项自动化测试；部署到其他设备后仍需自行进行实机确认。
+长期运行稳定性、真实睡眠唤醒后的蓝牙恢复尚未在本轮专项实机验收。
+项目保留classic和B2；升级备份在backups目录。
+详细修改记录见B3-delivery.md；技术说明见README.md。
