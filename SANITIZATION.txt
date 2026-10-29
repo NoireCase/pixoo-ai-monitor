@@ -1,8 +1,11 @@
 Sanitized source export
 Allowlist only; no runtime configuration, logs, backups, real screenshots or archives.
 Text B2 golden masks retain only synthetic test-example layouts.
-No license grant for the overall project was invented; upstream MIT notice preserved.
+Project MIT license granted by NoireCase; upstream PixooCtrl MIT notice preserved separately.
 Files:
+CHANGELOG.md
+LICENSE
+THIRD_PARTY_NOTICES.md
 .gitignore
 app.py
 autostart.bat

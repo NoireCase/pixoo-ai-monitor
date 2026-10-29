@@ -105,7 +105,7 @@ display_data_stale_seconds：过期判断秒数，当前360。
 enabled：启用的平台，go、cx、ds分别表示OpenCode Go、Codex、DeepSeek。
 windows：需要展示的窗口，仍写"5H"、"7D"、"30D"。
   即使B3画面用W标记周额度，配置中仍使用"7D"。
-mac、port：已经验证的Pixoo地址与RFCOMM端口，正常使用无需更改。
+mac、port：填写自己的Pixoo地址与RFCOMM端口；默认端口为1，需通过硬件测试验证。
 low、warning：旧版classic的颜色阈值；B3按20%和60%的固定规则着色。
 deepseek_reference_peak_cny：旧B2参考峰值参数；B3不使用它。
 
@@ -182,5 +182,5 @@ Credential Manager和Codex登录属于具体用户，需要在新用户环境重
 
 B3包含119项自动化测试；部署到其他设备后仍需自行进行实机确认。
 长期运行稳定性、真实睡眠唤醒后的蓝牙恢复尚未在本轮专项实机验收。
-项目保留classic和B2；升级备份在backups目录。
-详细修改记录见B3-delivery.md；技术说明见README.md。
+项目保留classic和B2；本发行包不包含个人升级备份。
+首次安装顺序、更新记录和许可分别见README.md、CHANGELOG.md和LICENSE。
