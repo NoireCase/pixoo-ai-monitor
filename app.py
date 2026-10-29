@@ -6,6 +6,7 @@ from providers.base import Reading
 from providers.sources import fetch, mock
 from display.renderer import render, render_configured
 from drivers.pixoo import Pixoo
+from runtime_health import RuntimeStatus
 ROOT=Path(__file__).resolve().parent
 os.chdir(ROOT)
 DEFAULT={'mac':'','port':1,'brightness':50,'rotation_seconds':5,'refresh_seconds':120,'enabled':['go','cx','ds'],'windows':['5H','7D','30D'],'low':20,'warning':50,'display_style':'classic','deepseek_reference_peak_cny':100}
@@ -20,18 +21,25 @@ def lock():
 class Monitor:
     def __init__(self,c,mocked=False):
         self.c=c; self.mocked=mocked; self.data={}; self.guard=threading.Lock(); self.stop=threading.Event()
+        self.provider_health={p:{'status':'PENDING','last_success_at':None,'last_attempt_at':None,'in_progress':False,'error_kind':None} for p in c['enabled']}
     def refresh(self):
         if self.mocked:
             for r in mock(): self.data.setdefault(r.provider_id,[]).append(r)
             return
         def worker(pid):
             while not self.stop.is_set():
+                with self.guard:
+                    meta=self.provider_health.setdefault(pid,{'status':'PENDING','last_success_at':None,'error_kind':None})
+                    meta.update(last_attempt_at=time.time(),in_progress=True)
                 try:
                     result=fetch(pid)
                     with self.guard:
                         old=self.data.get(pid,[])
                         if result[0].status!='OK' and old and old[0].status in ('OK','STALE'): result=[replace(r,status='STALE',error_message=result[0].error_message) for r in old]
                         self.data[pid]=result
+                        meta=self.provider_health[pid]
+                        meta.update(status=result[0].status,in_progress=False,error_kind=None if result[0].status=='OK' else result[0].status)
+                        if result[0].status=='OK': meta['last_success_at']=time.time()
                 except Exception as e:
                     from urllib.error import HTTPError
                     summary=f'HTTP {e.code}' if isinstance(e,HTTPError) else type(e).__name__
@@ -40,6 +48,7 @@ class Monitor:
                         old=self.data.get(pid,[])
                         message=str(e) if pid=='cx' and isinstance(e,(TimeoutError,RuntimeError)) else summary
                         self.data[pid]=[replace(r,status='STALE',error_message=message) for r in old] if old and old[0].status in ('OK','STALE') else [Reading(pid,pid.upper(),status='ERROR',error_message=message)]
+                        self.provider_health[pid].update(status=self.data[pid][0].status,in_progress=False,error_kind=summary)
                 self.stop.wait(max(15,float(self.c['refresh_seconds'])))
         for pid in self.c['enabled']:
             threading.Thread(target=worker,args=(pid,),daemon=True).start()
@@ -105,9 +114,12 @@ def main():
         def close(): m.stop.set(); root.destroy()
         root.protocol('WM_DELETE_WINDOW',close); tick(); root.mainloop(); return
     d=Pixoo(c['mac'],int(c['port'])); delay=1; retry=0; last=None; index=0
+    runtime=RuntimeStatus(ROOT/'runtime-status.json',c)
+    runtime.write(m)
     next_rotation=0; current_page=0
     try:
         while not (ROOT/'stop.request').exists():
+            runtime.write(m)
             start=time.monotonic(); pages=m.pages()
             if c.get('display_style')=='b3':
                 if start>=next_rotation:
@@ -120,15 +132,25 @@ def main():
                 try:
                     if d.sock is None: d.connect(); d.brightness(c['brightness']); last=None
                     raw=img.tobytes()
-                    if raw!=last: d.show(img); last=raw
+                    if raw!=last:
+                        d.show(img); last=raw
+                        runtime.data.update(last_send_at=time.time(),frame_result='sent')
+                    else: runtime.data['frame_result']='unchanged'
+                    runtime.data['last_bluetooth_error']=None
                     delay=1
                 except Exception as e:
                     logging.warning('Bluetooth failure: %s',type(e).__name__); d.close(); retry=time.monotonic()+delay; delay=min(delay*2,60); last=None
+                    runtime.data.update(last_bluetooth_error=type(e).__name__,frame_result='waiting_reconnect')
+            else:
+                runtime.data['frame_result']='waiting_reconnect' if c['mac'] else 'not_configured'
+            runtime.write(m,last_frame_check_at=time.time(),bluetooth_connected=d.sock is not None)
             wait=max(.1,float(c['rotation_seconds'])-(time.monotonic()-start))
             if c.get('display_style')=='b3': wait=max(.1,min(60,next_rotation-time.monotonic()))
             time.sleep(wait)
     except KeyboardInterrupt: pass
-    finally: m.stop.set(); d.close()
+    finally:
+        m.stop.set(); d.close()
+        runtime.write(m,state='stopped',bluetooth_connected=False,frame_result='stopped')
 if __name__=='__main__': main()
 
 

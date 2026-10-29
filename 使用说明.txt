@@ -4,7 +4,7 @@
 
 一、当前状态
 
-此版本支持B3六页真实额度轮播；请配置自己的设备和账户。
+本版本支持B3六页真实额度轮播；请配置自己的设备与账户。
 OpenCode Go、Codex、DeepSeek 的数据各自独立。
 程序仅使用第一代 Pixoo 16×16 的蓝牙通信，不需要保持手机 App 开启。
 
@@ -105,7 +105,7 @@ display_data_stale_seconds：过期判断秒数，当前360。
 enabled：启用的平台，go、cx、ds分别表示OpenCode Go、Codex、DeepSeek。
 windows：需要展示的窗口，仍写"5H"、"7D"、"30D"。
   即使B3画面用W标记周额度，配置中仍使用"7D"。
-mac、port：填写自己的Pixoo地址与RFCOMM端口；默认端口为1，需通过硬件测试验证。
+mac、port：填写自己的Pixoo地址与RFCOMM端口；默认端口1，需进行硬件测试。
 low、warning：旧版classic的颜色阈值；B3按20%和60%的固定规则着色。
 deepseek_reference_peak_cny：旧B2参考峰值参数；B3不使用它。
 
@@ -122,6 +122,22 @@ deepseek_reference_peak_cny：旧B2参考峰值参数；B3不使用它。
   Unregister-ScheduledTask -TaskName "Pixoo AI Monitor"
 
 七、预览、导出与诊断
+
+健康自检：双击 health-check.bat。
+会检查本项目可识别的监控实例、进程身份、主循环心跳、蓝牙记录和各平台刷新状态。
+结果为 HEALTHY（健康）、DEGRADED（运行中有异常）、UNHEALTHY（未运行或不健康）、UNKNOWN（信息不足）。
+只读检查，不读取密钥、不请求额度API、不另开蓝牙、不自动重启或终止进程。
+从旧版本升级后，请用stop.bat/start.bat正常重启一次以启用心跳，之后可直接自检。
+runtime-status.json 是本地运行心跳，不包含密钥、余额或设备地址，请勿手动修改。
+如果读取进程清单的权限不足，结果会明确显示UNKNOWN，不会冒充健康。
+“socket已连接/程序发送成功”不等于设备画面已被人看到，设备实际画面仍需目视确认。
+画面未变化时跳过发送属于正常行为，不会因为很久没重复发送就判定程序卡死。
+
+命令行自检（在本目录执行）：
+  .\.venv\Scripts\python.exe health_check.py
+机器可读输出：
+  .\.venv\Scripts\python.exe health_check.py --json
+退出码：0健康、1有异常、2未运行或不健康、3无法确认。
 
 preview.bat：打开模拟器，使用明确标注的MOCK数据，不代表真实账户余额。
 diagnose.bat：检查Python、蓝牙适配器、设备、驱动、Codex CLI及峰谷规则状态。
@@ -180,7 +196,7 @@ Credential Manager和Codex登录属于具体用户，需要在新用户环境重
 
 九、维护与验收记录
 
-B3包含119项自动化测试；部署到其他设备后仍需自行进行实机确认。
+本版包含150项自动化测试；部署到其他设备后仍需自行进行实机确认。
 长期运行稳定性、真实睡眠唤醒后的蓝牙恢复尚未在本轮专项实机验收。
 项目保留classic和B2；本发行包不包含个人升级备份。
-首次安装顺序、更新记录和许可分别见README.md、CHANGELOG.md和LICENSE。
+首次安装、更新记录和许可分别见README.md、CHANGELOG.md和LICENSE。

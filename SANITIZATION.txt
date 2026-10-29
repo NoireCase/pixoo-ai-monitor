@@ -1,12 +1,17 @@
-Sanitized source export
-Allowlist only; no runtime configuration, logs, backups, real screenshots or archives.
-Text B2 golden masks retain only synthetic test-example layouts.
-Project MIT license granted by NoireCase; upstream PixooCtrl MIT notice preserved separately.
+Sanitized source distribution v0.2.0
+Runtime configuration, credential stores, logs, heartbeat files, backups and real account images are excluded.
+docs/screens PNGs are generated solely from synthetic data by scripts/generate_readme_previews.py; they contain no live account values or device photos.
+Original 16x16 screens are production Renderer outputs. Labels outside the screens explicitly identify demo data.
+Text B2 golden masks are test fixtures, not live screenshots.
+Project MIT license and upstream PixooCtrl MIT notice preserved.
 Files:
+.gitignore
 CHANGELOG.md
 LICENSE
+LICENSE-PixooCtrl
+README.md
+SANITIZATION.txt
 THIRD_PARTY_NOTICES.md
-.gitignore
 app.py
 autostart.bat
 autostart.ps1
@@ -21,12 +26,73 @@ display/b2.py
 display/b3.py
 display/renderer.py
 display/time_status.py
+docs/screens/README.txt
+docs/screens/countdown-states.png
+docs/screens/cx_5h_16.png
+docs/screens/cx_5h_320.png
+docs/screens/cx_7d_16.png
+docs/screens/cx_7d_320.png
+docs/screens/deepseek-states.png
+docs/screens/ds_cny_16.png
+docs/screens/ds_cny_320.png
+docs/screens/ds_off_peak_16.png
+docs/screens/ds_off_peak_320.png
+docs/screens/ds_peak_16.png
+docs/screens/ds_peak_320.png
+docs/screens/ds_unknown_16.png
+docs/screens/ds_unknown_320.png
+docs/screens/error-states.png
+docs/screens/error_16.png
+docs/screens/error_320.png
+docs/screens/go_30d_16.png
+docs/screens/go_30d_320.png
+docs/screens/go_5h_16.png
+docs/screens/go_5h_320.png
+docs/screens/go_7d_16.png
+docs/screens/go_7d_320.png
+docs/screens/not_configured_16.png
+docs/screens/not_configured_320.png
+docs/screens/pages.png
+docs/screens/quota-states.png
+docs/screens/quota_0_16.png
+docs/screens/quota_0_320.png
+docs/screens/quota_100_16.png
+docs/screens/quota_100_320.png
+docs/screens/quota_19_16.png
+docs/screens/quota_19_320.png
+docs/screens/quota_20_16.png
+docs/screens/quota_20_320.png
+docs/screens/quota_59_16.png
+docs/screens/quota_59_320.png
+docs/screens/quota_60_16.png
+docs/screens/quota_60_320.png
+docs/screens/reset_0m_16.png
+docs/screens/reset_0m_320.png
+docs/screens/reset_1h20_16.png
+docs/screens/reset_1h20_320.png
+docs/screens/reset_20m_16.png
+docs/screens/reset_20m_320.png
+docs/screens/reset_30m_16.png
+docs/screens/reset_30m_320.png
+docs/screens/reset_3h25_16.png
+docs/screens/reset_3h25_320.png
+docs/screens/reset_3h35_16.png
+docs/screens/reset_3h35_320.png
+docs/screens/reset_4h_16.png
+docs/screens/reset_4h_320.png
+docs/screens/reset_5h_16.png
+docs/screens/reset_5h_320.png
+docs/screens/reset_missing_16.png
+docs/screens/reset_missing_320.png
+docs/screens/stale_16.png
+docs/screens/stale_320.png
 drivers/pixoo.py
 export_visual_review.py
 hardware-test.bat
+health-check.bat
+health_check.py
 integration_test.py
 isolation_diagnose.py
-LICENSE-PixooCtrl
 preview.bat
 preview_b2_samples.py
 preview_b3_samples.py
@@ -34,8 +100,9 @@ provider_diagnose.py
 providers/base.py
 providers/sources.py
 pytest.ini
-README.md
 requirements.txt
+runtime_health.py
+scripts/generate_readme_previews.py
 set-key.bat
 set-key.py
 setup.ps1
@@ -45,4 +112,7 @@ tests/b2_layout_masks.json
 tests/test_b2.py
 tests/test_b3.py
 tests/test_core.py
+tests/test_health.py
+tests/test_readme_screens.py
+tests/test_status_font.py
 使用说明.txt
