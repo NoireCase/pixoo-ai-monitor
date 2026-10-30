@@ -4,6 +4,8 @@
 
 ## 下载与启动
 
+当前版本：[v1.0.1（2026-10-30）](https://github.com/NoireCase/pixoo-ai-monitor/releases/tag/v1.0.1)，修复重启后无法识别 Codex 桌面版附带 CLI 的问题。
+
 从 [Releases](https://github.com/NoireCase/pixoo-ai-monitor/releases) 下载 Windows 发行包，完整解压后双击 `Pixoo AI 监控.exe`。EXE 与 `_internal` 等资源必须保存在同一目录；无需另装 Python。Codex 数据仍需要本机已安装并登录 Codex CLI。
 
 1. 在 Windows 中配对 Pixoo，在“设备 → 高级设备设置”填写设备地址与端口。
