@@ -211,8 +211,8 @@ class Window(QMainWindow):
     def hardware(self):
         if QMessageBox.question(self,'硬件测试','将暂时显示红、绿、蓝，完成后恢复画面。继续？')==QMessageBox.StandardButton.Yes: self.command('hardware')
     def codex_check(self):
-        import shutil
-        QMessageBox.information(self,'Codex 环境','CLI：'+('已安装' if shutil.which('codex') else '未找到')+'\n登录和额度状态由 Worker 获取，请查看服务卡片。')
+        from providers.sources import find_codex
+        QMessageBox.information(self,'Codex 环境','CLI：'+('已安装' if find_codex() else '未找到')+'\n登录和额度状态由 Worker 获取，请查看服务卡片。')
     def preview(self):
         if not self.state: QMessageBox.information(self,'预览','需要后台已有的读数；当前不可用。'); return
         from page_selection import PAGE_KEYS

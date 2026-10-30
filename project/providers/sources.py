@@ -1,4 +1,5 @@
 import json, os, shutil, subprocess, threading, queue
+from pathlib import Path
 from decimal import Decimal
 from urllib.request import Request, urlopen
 from providers.base import Reading
@@ -40,8 +41,18 @@ def codex_parse(result):
         if label: out.append(Reading('cx','Codex',source='codex app-server',remaining_percent=max(0,min(100,100-float(w['usedPercent']))),unit='%',reset_at=w.get('resetsAt'),window=label,details={'credits':snap.get('credits'),'window_duration_minutes':minutes}))
     if not out: raise ValueError('No supported Codex windows')
     return out
-def codex():
+def find_codex():
     exe=shutil.which('codex')
+    if exe: return exe
+    if os.name != 'nt' or not os.environ.get('LOCALAPPDATA'): return None
+    root=Path(os.environ['LOCALAPPDATA'])/'OpenAI'/'Codex'/'bin'
+    try:
+        candidates=[p for p in root.glob('*/codex.exe') if p.is_file()]
+        return str(max(candidates,key=lambda p:p.stat().st_mtime)) if candidates else None
+    except OSError:
+        return None
+def codex():
+    exe=find_codex()
     if not exe: return [Reading('cx','Codex',status='NOT_CONFIGURED',error_message='Codex CLI not found')]
     p=subprocess.Popen([exe,'app-server'],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,encoding='utf-8',errors='replace',creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0)); q=queue.Queue(); stderr_flags=set()
     def reader():
